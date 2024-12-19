@@ -2,6 +2,7 @@ package dsa.proyecto.G4.services;
 
 import dsa.proyecto.G4.UserManager;
 import dsa.proyecto.G4.UserManagerImpl;
+import dsa.proyecto.G4.models.Badge;
 import dsa.proyecto.G4.models.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +14,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.ArrayList;
 
 @Api(value = "/usuarios", description = "Endpoint to User Service")
 @Path("/usuarios")
@@ -25,9 +27,8 @@ public class UserService {
 
         // Datos de ejemplo
         if (userManager.countUsers()==0) {
-            this.userManager.addUsuario(new User("1", "Alice", "123"));
-            this.userManager.addUsuario(new User("2", "Bob", "456"));
-            this.userManager.addUsuario(new User("3", "Charlie", "789"));
+            this.userManager.addUsuario(new User("13", "Alice", "123"));
+            this.userManager.addUsuario(new User("14", "Bob", "456"));
         }
     }
 
@@ -115,6 +116,35 @@ public class UserService {
         if(u == null) return Response.status(404).build();
         return Response.status(201).entity(u).build();
     }
+
+    @GET
+    @Path("/{id}/badges")
+    @ApiOperation(value = "Obtener insignias de un usuario por ID", notes = "Devuelve las insignias asociadas al usuario especificado")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful", response = Badge.class, responseContainer = "List"),
+            @ApiResponse(code = 404, message = "Usuario no encontrado")
+    })
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserBadges(@PathParam("id") String id) {
+        List<Badge> badges = new ArrayList<>();
+
+        // Datos de prueba del enunciado, pruebo con id=13 y id=14 ya que no tengo un put para añadir insignias, añado tambien algunas fotos extras
+        if (id.equals("13")) {
+            badges.add(new Badge("Master del universo", "https://cdn.pixabay.com/photo/2017/07/11/15/51/kermit-2493979_1280.png"));
+            badges.add(new Badge("Reina de DSA", "https://img.freepik.com/vector-gratis/elegante-reina-corona-oro_1308-174936.jpg"));
+        } else if (id.equals("14")) {
+            badges.add(new Badge("Becario enfurecido", "https://cdn.pixabay.com/photo/2017/07/11/15/51/kermit-2493979_1280.png"));
+            badges.add(new Badge("El Bachiller", "https://images.vexels.com/content/205462/preview/pile-of-books-illustration-b5a415.png"));
+        } else {
+            return Response.status(404).entity("Usuario no encontrado").build();
+        }
+
+        // Usar GenericEntity para ayudar a Jersey a reconocer el tipo de la lista
+        GenericEntity<List<Badge>> entity = new GenericEntity<List<Badge>>(badges) {};
+        return Response.ok(entity).build();
+    }
+
+
 
 
 }

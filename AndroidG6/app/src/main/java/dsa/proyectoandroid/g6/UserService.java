@@ -1,4 +1,6 @@
 package dsa.proyectoandroid.g6;
+
+import dsa.proyectoandroid.g6.models.Badge;
 import dsa.proyectoandroid.g6.models.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -23,6 +25,8 @@ public interface UserService {
     Call<User> login(@Body User credentials);
 
     @PUT("dsaApp/usuarios/{id}")
-    Call<User> updateUser(@Path("id") String id,@Body User user);
-}
+    Call<User> updateUser(@Path("id") String id, @Body User user);
 
+    @GET("dsaApp/usuarios/{id}/badges")
+    Call<List<Badge>> getUserBadges(@Path("id") String userId);
+}

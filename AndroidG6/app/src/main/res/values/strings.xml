@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AndroidG6</string>
+    <string name="badge_image">Description of the badge image</string>
+
 </resources>
